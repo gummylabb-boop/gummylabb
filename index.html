@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gummy Lab | Bienestar en cada mordida</title>
+    
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- AOS Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #27ae60;
+            --jamaica: #ff4757;
+            --menta: #2ed573;
+            --manzana: #ffa502;
+            --dark: #1e272e;
+            --glass: rgba(255, 255, 255, 0.75);
+            --border-glass: rgba(255, 255, 255, 0.4);
+            --shadow: 0 20px 40px rgba(0,0,0,0.05);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--dark);
+            background-color: #fcfcfc;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+
+        /* Glassmorphism Navbar */
+        .navbar {
+            transition: all 0.5s ease;
+            padding: 20px 0;
+            border-bottom: 1px solid transparent;
+        }
+
+        .navbar.scrolled {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-glass);
+            box-shadow: var(--shadow);
+        }
+
+        .navbar-brand {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--dark) !important;
+            font-size: 1.6rem;
+        }
+
+        /* Hero Section with Mesh Gradient */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 100px;
+            background: 
+                radial-gradient(at 0% 0%, rgba(46, 213, 115, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(255, 71, 87, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(255, 165, 2, 0.1) 0px, transparent 50%);
+            overflow: hidden;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 5rem);
+            line-height: 1;
+            margin-bottom: 2rem;
+        }
+
+        .hero-image {
+            position: relative;
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Sabor Cards - Bento Style */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 20px;
+        }
+
+        .flavor-card {
+            border-radius: 30px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: #fff;
+            border: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+
+        .flavor-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+        }
+
+        .flavor-card.jamaica { grid-column: span 6; background: linear-gradient(135deg, #fff 0%, #fff5f5 100%); }
+        .flavor-card.menta { grid-column: span 6; background: linear-gradient(135deg, #fff 0%, #f0fff4 100%); }
+
+        .flavor-tag {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        /* Buttons (Norman: Affordance) */
+        .btn-main {
+            padding: 18px 40px;
+            border-radius: 100px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            background: var(--dark);
+            color: #fff;
+        }
+
+        .btn-main:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            color: #fff;
+        }
+
+        .btn-main::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 0; height: 100%;
+            background: var(--primary);
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+
+        .btn-main:hover::before { width: 100%; }
+
+        /* Form (Nielsen: Error Prevention) */
+        .form-glass {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-glass);
+            border-radius: 30px;
+            padding: 50px;
+        }
+
+        .form-control {
+            border: none;
+            border-bottom: 2px solid #e0e0e0;
+            border-radius: 0;
+            padding: 15px 0;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            border-color: var(--primary);
+            background: transparent;
+        }
+
+        /* Floating Animation */
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .float { animation: floating 6s ease-in-out infinite; }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .flavor-card.jamaica, .flavor-card.menta { grid-column: span 12; }
+            .hero { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Nav (Nielsen: Consistency) -->
+    <nav class="navbar navbar-expand-lg fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="#">GUMMY LAB<span>.</span></a>
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link fw-bold mx-2" href="#home">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold mx-2" href="#sabores">Sabores</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold mx-2" href="#contacto">Contacto</a></li>
+                    <li class="nav-item ms-lg-3"><a href="#sabores" class="btn-main py-2 px-4" style="font-size: 0.9rem;">Comprar</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6" data-aos="fade-up">
+                    <h1 class="hero-title">El lado <span class="text-success italic">natural</span> del placer.</h1>
+                    <p class="lead mb-5 text-muted">Gomitas artesanales infusionadas con extractos botánicos premium. Sin culpas, solo beneficios.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <button class="btn-main">Explorar Colección</button>
+                        <div class="d-flex align-items-center gap-2 ms-lg-4 mt-3 mt-lg-0">
+                            <div class="d-flex">
+                                <span class="text-warning">★★★★★</span>
+                            </div>
+                    
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mt-5 mt-lg-0 d-none d-lg-block">
+                    <div class="float text-center">
+                        <img src="https://i.pinimg.com/1200x/67/05/c6/6705c6d09e296edaccbe1082fe55de7d.jpg" 
+                             alt="Gummy Lab Package" 
+                             class="img-fluid rounded-circle shadow-lg" 
+                             style="width: 80%; border: 15px solid white;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sabores (Bento Grid) -->
+    <section id="sabores" class="py-5">
+        <div class="container py-5">
+            <div class="row mb-5">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <h2 class="display-4">Nuestros <br>sabores imperdibles</h2>
+                </div>
+                <div class="col-lg-6 d-flex align-items-end" data-aos="fade-left">
+                    <p class="text-muted">Cada gomita es el resultado de meses de investigación herbolaria para encontrar el equilibrio perfecto entre salud y dulzura.</p>
+                </div>
+            </div>
+
+            <div class="bento-grid">
+                <!-- Jamaica -->
+                <div class="flavor-card jamaica" data-aos="fade-up">
+                    <span class="flavor-tag" style="background: #ffe0e3; color: var(--jamaica);">Vigorizante</span>
+                    <h3 class="display-6 mb-3">Jamaica </h3>
+                    <p class="text-muted mb-4">Un estallido de antioxidantes recolectado a mano.</p>
+                    <div class="d-flex justify-content-between align-items-end">
+                        <h4 class="fw-bold m-0">$35 MXN x 35 gr</h4>
+                        <button class="btn btn-outline-dark rounded-circle" style="width: 50px; height: 50px;">→</button>
+                        <div class="bg-white rounded-circle p-4 shadow-sm" style="font-size: 5rem;">🌺</div>
+                    </div>
+                </div>
+
+                <!-- Menta -->
+                <div class="flavor-card menta" data-aos="fade-up" data-aos-delay="100">
+                    <span class="flavor-tag" style="background: #e1fdf0; color: var(--menta);">Relajante</span>
+                    <h3 class="display-6 mb-3">Menta Glacial</h3>
+                    <p class="text-muted mb-4">Fresco alivio digestivo con notas de menta piperita pura de alta montaña.</p>
+                    <div class="d-flex justify-content-between align-items-end">
+                        <h4 class="fw-bold m-0">$35 MXN x 35 gr</h4>
+                        <button class="btn btn-outline-dark rounded-circle" style="width: 50px; height: 50px;">→</button>
+                        <div class="bg-white rounded-circle p-4 shadow-sm" style="font-size: 5rem;">🌿</div>
+                    </div>
+                </div>
+        </div>
+    </section>
+
+    <!-- Contacto -->
+    <section id="contacto" class="py-5">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="form-glass shadow-lg" data-aos="zoom-in">
+                        <div class="row g-5">
+                            <div class="col-md-5">
+                                <h2 class="display-5 mb-4">¿Hablamos de bienestar?</h2>
+                                <p class="text-muted mb-5">Estamos listos para surtir tu tienda o resolver cualquier duda sobre nuestros procesos.</p>
+                                <div class="mb-4">
+                                    <p class="mb-1 fw-bold">WhatsApp</p>
+                                    <p class="text-success h5">+52 55 1234 5678</p>
+                                </div>
+                                <div>
+                                    <p class="mb-1 fw-bold">Ubicación</p>
+                                    <p class="text-muted">Lab Central, Ciudad de México</p>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <form id="gummyForm" novalidate>
+                                    <div class="row g-4">
+                                        <div class="col-12">
+                                            <input type="text" id="name" class="form-control" placeholder="Nombre completo" required>
+                                        </div>
+                                        <div class="col-12">
+                                            <input type="email" id="email" class="form-control" placeholder="Correo electrónico" required>
+                                        </div>
+                                        <div class="col-12">
+                                            <textarea id="msg" class="form-control" rows="4" placeholder="Tu mensaje..." required minlength="10"></textarea>
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="submit" class="btn-main w-100 mt-3" id="btnSubmit">Enviar Solicitud</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div id="feedback" class="mt-4 p-3 rounded-4 d-none"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark text-white">
+        <div class="container text-center">
+            <h2 class="mb-4">GUMMY LAB<span>.</span></h2>
+            <p class="opacity-50 mb-5">Naturaleza, ciencia y sabor en perfecto equilibrio.</p>
+            <div class="d-flex justify-content-center gap-4 mb-5">
+                <a href="#" class="text-white text-decoration-none">Instagram</a>
+                <a href="#" class="text-white text-decoration-none">TikTok</a>
+            </div>
+            <p class="small opacity-25 m-0">&copy; 2024 Gummy Lab Inc. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- JS Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        // AOS Init
+        AOS.init({ duration: 1200, once: true });
+
+        // Scroll Logic (Nielsen: Visibility)
+        const nav = document.getElementById('mainNav');
+        window.addEventListener('scroll', () => {
+            if(window.scrollY > 100) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        // Form Logic (Nielsen & Norman: Feedback/Error Prevention)
+        const form = document.getElementById('gummyForm');
+        const feedback = document.getElementById('feedback');
+        const btn = document.getElementById('btnSubmit');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            if (!form.checkValidity()) {
+                feedback.innerHTML = "⚠️ Por favor, revisa que todos los campos sean correctos.";
+                feedback.className = "mt-4 p-3 rounded-4 alert alert-danger d-block";
+                form.classList.add('was-validated');
+            } else {
+                // Feedback visual de carga
+                btn.innerHTML = "Procesando...";
+                btn.disabled = true;
+
+                setTimeout(() => {
+                    feedback.innerHTML = "✨ ¡Gracias! Hemos recibido tu mensaje, nos pondremos en contacto pronto.";
+                    feedback.className = "mt-4 p-3 rounded-4 alert alert-success d-block";
+                    form.reset();
+                    form.classList.remove('was-validated');
+                    btn.innerHTML = "Enviar Solicitud";
+                    btn.disabled = false;
+                }, 2000);
+            }
+        });
+
+        // Parallax Effect (Aesthetics)
+        window.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            const heroImg = document.querySelector('.float img');
+            if(heroImg) {
+                heroImg.style.transform = `translate(${x * 20}px, ${y * 20}px)`;
+            }
+        });
+    </script>
+</body>
+</html>
+
